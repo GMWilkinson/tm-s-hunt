@@ -9,7 +9,7 @@ import Card from 'react-bootstrap/Card'
 import Spinner from 'react-bootstrap/Spinner'
 
 import { createNewTeam } from '../api/createNewTeam'
-import { getLocationData } from '../api/getLocationData'
+import { setStartTime } from '../api/setStartTime'
 
 const Landing = () => {
   const [name, setName] = useState('')
@@ -17,12 +17,17 @@ const Landing = () => {
   const [nameIsSet, setNameIsSet] = useState(false)
 
   const createTeam = async () => {
-    console.log(name)
     setLoading(true)
     await createNewTeam(name)
     setLoading(false)
     setNameIsSet(true)
   }
+
+  const startGame = async () => {
+    await setStartTime()
+    window.location.href = '/questions'
+  }
+
   return (
     <main className="App">
       <Card>
@@ -43,7 +48,7 @@ const Landing = () => {
                 <>
                   <Card.Text>When you click "Start" the timer will begin. Fastest time wins!</Card.Text>
                   <Card.Text>You can use a clue if you get stuck but these will add time to your score</Card.Text>
-                  <Button disabled={!nameIsSet} onClick={() => createTeam()} variant="primary">Start</Button>
+                  <Button disabled={!nameIsSet} onClick={() => startGame()} variant="primary">Start</Button>
                 </>
               ) : null}
             </>

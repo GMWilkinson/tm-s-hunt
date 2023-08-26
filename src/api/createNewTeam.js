@@ -1,4 +1,4 @@
-var Airtable = require('airtable');
+import Airtable from 'airtable'
 var base = new Airtable({apiKey: process.env.REACT_APP_AIRTABLE_API_KEY}).base('app03n7sTByRoi7AM');
 
 export const createNewTeam = (teamName) => {
@@ -8,6 +8,8 @@ export const createNewTeam = (teamName) => {
       {
         "fields": {
           "Name": teamName,
+          "current-question": 0,
+          "penalties": 0,
         }
       }
     ], function(err, records) {

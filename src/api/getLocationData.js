@@ -9,7 +9,6 @@ export const getLocationData = () => {
       view: "Grid view"
   }).eachPage(function page(records, fetchNextPage) {
       records.forEach(function(record) {
-          console.log('Retrieved', record);
           locations.push(record)
       })
       fetchNextPage()
