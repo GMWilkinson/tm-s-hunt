@@ -12,39 +12,51 @@ const Results = () => {
   const [team, setTeam] = useState(null)
   const [time, setTime] = useState('') 
   const [timeWithPenalties, setTimeWithPenalties] = useState('') 
+  const [hasFired, setHasFired] = useState(false)
 
-  const getTime = (score) => {
+  const getDisplayTime = (score) => {
     const minutes = Math.floor(score / 60000)
-    const seconds = ((score % 60000) / 1000).toFixed(0)
-    setTime(minutes + ":" + (seconds < 10 ? '0' : '') + seconds)
+    setTime(minutes + " minutes")
   }
 
-  const getTimeWithPenalties = (score) => {
+  const getDisplayTimeWithPenalties = (score) => {
     const minutes = Math.floor(score / 60000)
-    const seconds = ((score % 60000) / 1000).toFixed(0)
-    setTimeWithPenalties(minutes + ":" + (seconds < 10 ? '0' : '') + seconds)
+    setTimeWithPenalties(minutes + " minutes")
   }
 
   useEffect(() => {
     async function fetchData() {
+      if (localStorage.getItem('score-saved') === 'saved') {
+        localStorage.clear()
+        window.location.href = '/'
+      }
       setLoading(true)
+      const currentDate = new Date()
+      const currentTime = currentDate.getTime()
       const currentTeam = await getTeam()
       await setFinishTime(currentTeam.fields["start-time"], currentTeam.fields.penalties)
-      getTime(currentTeam.fields["finish-time"] - currentTeam.fields["start-time"])
-      getTimeWithPenalties((currentTeam.fields["finish-time"] + currentTeam.fields.penalties) - currentTeam.fields["start-time"])
+      getDisplayTime(currentTime - currentTeam.fields["start-time"])
+      getDisplayTimeWithPenalties((currentTime + currentTeam.fields.penalties) - currentTeam.fields["start-time"])
       setTeam(currentTeam)
       setLoading(false)
+      localStorage.setItem('score-saved', 'saved')
     }
     fetchData()
     
   }, [])
 
   return team ? (
-    <main className="App">
+    <main 
+      className="App"
+      style={{
+        backgroundImage: `url(${'./tm-logo.png'})`,
+        backgroundSize: "cover"
+      }}
+    >
       {loading ? (
         <Spinner animation="grow" />
       ) : (
-        <Card className="mb-3">
+        <Card style={{backgroundColor: 'rgba(234, 235, 247, .95)'}}>
             <Card.Header as="h5">Results for {team.fields.Name}</Card.Header>
             <Card.Body>
               <Card.Title>Time before penalties: {time}</Card.Title>

@@ -29,9 +29,14 @@ const Landing = () => {
   }
 
   return (
-    <main className="App">
-      <Card>
-        <Card.Header as="h5">Are you ready?</Card.Header>
+    <main 
+      className="App" 
+      style={{
+        backgroundImage: `url(${'./tm-logo.png'})`,
+        backgroundSize: "cover"
+      }}
+    >
+      <Card text="dark" style={{backgroundColor: 'rgba(234, 235, 247, .95)'}}>
         <Card.Body>
           {loading ? (
             <Spinner animation="grow" />
@@ -47,8 +52,13 @@ const Landing = () => {
               {nameIsSet ? (
                 <>
                   <Card.Text>When you click "Start" the timer will begin. Fastest time wins!</Card.Text>
-                  <Card.Text>You can use a clue if you get stuck but these will add time to your score</Card.Text>
-                  <Button disabled={!nameIsSet} onClick={() => startGame()} variant="primary">Start</Button>
+                  <Card.Text>You get a 5 minute penalty for using a clue and a 10 minute penalty for getting a question wrong so don't spam answers!!</Card.Text>
+                  <Button 
+                    disabled={!nameIsSet} 
+                    onClick={() => startGame()} 
+                  >
+                    Start
+                  </Button>
                 </>
               ) : null}
             </>

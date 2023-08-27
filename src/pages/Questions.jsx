@@ -68,17 +68,23 @@ const Questions = () => {
   }
 
   return team && currentQuestion ? (
-    <main className="App">
+    <main 
+      className="App"
+      style={{
+        backgroundImage: `url(${'./tm-logo.png'})`,
+        backgroundSize: "cover"
+      }}
+    >
       {loading ? (
         <Spinner animation="grow" />
       ) : (
-        <Card className="mb-3">
+        <Card className="mb-3" style={{backgroundColor: 'rgba(234, 235, 247, .95)'}}>
           {showIncorrectComponent ? (
             <>
               <Card.Header as="h5">Find the {team.fields["current-question"] === 0 ? 'first' : 'next'} location!</Card.Header>
               <Card.Body>
                 <Card.Title>Bad luck, remember there are clues to help if you need them</Card.Title>
-                  <Button onClick={() => setShowIncorrectComponent(false)} variant="primary">Try again</Button>
+                  <Button onClick={() => setShowIncorrectComponent(false)} variant="dark">Try again</Button>
               </Card.Body>
             </>
           ) : (
@@ -93,14 +99,14 @@ const Questions = () => {
                   <InputGroup className="mb-3">
                     <Form.Control aria-label="Team name" onChange={(e) => setAnswer(e.target.value)} />
                   </InputGroup>
-                  <Button onClick={() => submitAnswer()} variant="primary">Submit</Button>
+                  <Button onClick={() => submitAnswer()} variant="dark">Submit</Button>
               </Card.Body>
             </>
           )}
           </Card>
       )}
       {!loading && currentQuestion.clue ? (
-        <Button onClick={() => getClue()}>Give me a clue! 5 minute penalty</Button>
+        <Button variant="danger" onClick={() => getClue()}>Give me a clue! 5 minute penalty</Button>
       ) : null}
       <Modal
         show={showModal}
@@ -118,7 +124,6 @@ const Questions = () => {
           <Button variant="secondary" onClick={handleModalClose}>
             Close
           </Button>
-          <Button variant="primary">Understood</Button>
         </Modal.Footer>
       </Modal>
     </main>
