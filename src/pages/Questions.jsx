@@ -45,7 +45,7 @@ const Questions = () => {
   
   const submitAnswer = async () => {
     const isCorrect = answer.toLowerCase().includes(currentQuestion.answer)
-    if (true) {
+    if (isCorrect) {
       setAnswer('')
       setShowIncorrectComponent(false)
       await updateCurrentQuestion(team.fields["current-question"] + 1)
@@ -94,7 +94,7 @@ const Questions = () => {
             ) : (
               <>
                 {currentQuestion.type === 'location' ? (
-                  <Card.Header as="h5">Find the {team.fields["current-question"] === 0 ? 'first' : 'next'} location!</Card.Header>
+                  <Card.Header as="h5">Find the {team.fields["current-question"] === 0 ? 'first' : 'next'} location! Remember, Google is your friend</Card.Header>
                 ) : (
                   <Card.Header as="h5">{currentQuestion.name}! You will find the answer when you arrive</Card.Header>
                 )}

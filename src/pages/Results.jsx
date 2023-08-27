@@ -12,7 +12,6 @@ const Results = () => {
   const [team, setTeam] = useState(null)
   const [time, setTime] = useState('') 
   const [timeWithPenalties, setTimeWithPenalties] = useState('') 
-  const [hasFired, setHasFired] = useState(false)
 
   const getDisplayTime = (score) => {
     const minutes = Math.floor(score / 60000)

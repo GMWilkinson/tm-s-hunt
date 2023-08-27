@@ -1,5 +1,5 @@
 import Airtable from 'airtable';
-var base = new Airtable({apiKey: process.env.REACT_APP_AIRTABLE_API_KEY}).base('app03n7sTByRoi7AM');
+const base = new Airtable({apiKey: process.env.REACT_APP_AIRTABLE_API_KEY}).base(process.env.REACT_APP_AIRTABLE_BASE);
 
 export const getLocationData = () => {
   return new Promise((resolve, reject) => {
