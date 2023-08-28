@@ -1,7 +1,7 @@
 {
   "name": "tm-s-hunt",
   "version": "0.1.0",
-  "homepage": "https://gmwilkinson.github.io/tm-s-hunt/",
+  "homepage": "https://gmwilkinson.github.io/tm-s-hunt",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",

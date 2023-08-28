@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom"
 
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
@@ -23,6 +24,7 @@ const Questions = () => {
   const [updateData, setUpdateData] = useState(false)
   const [showIncorrectComponent, setShowIncorrectComponent] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
 
   const handleModalClose = () => setShowModal(false)
 
@@ -33,11 +35,9 @@ const Questions = () => {
       const currentTeam = await getTeam()
       setCurrentQuestion(questions[currentTeam.fields["current-question"]].fields)
       setAllQuestions(questions)
-      console.log(questions.length)
       setTeam(currentTeam)
       setLoading(false)
       setUpdateData(false)
-      console.log(currentTeam.fields["current-question"], questions.length)
     }
     fetchData()
     
@@ -51,7 +51,7 @@ const Questions = () => {
       await updateCurrentQuestion(team.fields["current-question"] + 1)
       setUpdateData(true)
       if (team.fields["current-question"] === allQuestions.length -1) {
-        window.location.href = '/results'
+        navigate('/results')
         return
       }
     } else {
@@ -120,7 +120,7 @@ const Questions = () => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>Clue!!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {currentQuestion.clue}

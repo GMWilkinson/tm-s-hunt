@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom"
 
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
@@ -15,6 +16,7 @@ const Landing = () => {
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
   const [nameIsSet, setNameIsSet] = useState(false)
+  const navigate = useNavigate()
 
   const createTeam = async () => {
     setLoading(true)
@@ -25,7 +27,7 @@ const Landing = () => {
 
   const startGame = async () => {
     await setStartTime()
-    window.location.href = '/questions'
+    navigate("/questions")
   }
 
   return (

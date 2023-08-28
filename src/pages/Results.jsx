@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom"
 
 import Card from 'react-bootstrap/Card'
 
@@ -12,6 +13,7 @@ const Results = () => {
   const [team, setTeam] = useState(null)
   const [time, setTime] = useState('') 
   const [timeWithPenalties, setTimeWithPenalties] = useState('') 
+  const navigate = useNavigate()
 
   const getDisplayTime = (score) => {
     const minutes = Math.floor(score / 60000)
@@ -27,7 +29,7 @@ const Results = () => {
     async function fetchData() {
       if (localStorage.getItem('score-saved') === 'saved') {
         localStorage.clear()
-        window.location.href = '/'
+        navigate('/')
       }
       setLoading(true)
       const currentDate = new Date()
