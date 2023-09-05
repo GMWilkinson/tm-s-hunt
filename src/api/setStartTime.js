@@ -17,7 +17,6 @@ export const setStartTime = () => {
       if (err) {
         return reject(err)
       }
-      console.log(records)
       return resolve(records)
     });
   })

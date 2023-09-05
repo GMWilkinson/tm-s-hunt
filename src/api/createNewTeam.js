@@ -1,7 +1,17 @@
 import Airtable from 'airtable'
-const base = new Airtable({apiKey: process.env.REACT_APP_AIRTABLE_API_KEY}).base(process.env.REACT_APP_AIRTABLE_BASE);
 
-export const createNewTeam = (teamName) => {
+import { getAllTeams } from './getAllTeams'
+
+const base = new Airtable({apiKey: process.env.REACT_APP_AIRTABLE_API_KEY}).base(process.env.REACT_APP_AIRTABLE_BASE)
+
+export const createNewTeam = async (teamName) => {
+  const allTeams = await getAllTeams()
+
+  const checkName = allTeams.filter((team) => team.fields.Name === teamName)
+  if (checkName.length > 0) {
+    localStorage.setItem('teamId', checkName[0].id)
+    return 'exists'
+  }
   return new Promise((resolve, reject) => {
     const newTeam = []
     base('Teams').create([
@@ -10,6 +20,7 @@ export const createNewTeam = (teamName) => {
           "Name": teamName,
           "current-question": 0,
           "penalties": 0,
+          "total-time": 'unset'
         }
       }
     ], function(err, records) {

@@ -17,7 +17,8 @@ import { setPenalty } from '../api/setPenalty'
 
 const Questions = () => {
   const [answer, setAnswer] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [correctLoading, setCorrectLoading] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [allQuestions, setAllQuestions] = useState(null)
   const [team, setTeam] = useState(null)
@@ -37,6 +38,7 @@ const Questions = () => {
       setAllQuestions(questions)
       setTeam(currentTeam)
       setLoading(false)
+      setCorrectLoading(false)
       setUpdateData(false)
     }
     fetchData()
@@ -46,18 +48,32 @@ const Questions = () => {
   const submitAnswer = async () => {
     const isCorrect = answer.toLowerCase().includes(currentQuestion.answer)
     if (isCorrect) {
+      setCorrectLoading(true)
       setAnswer('')
       setShowIncorrectComponent(false)
       await updateCurrentQuestion(team.fields["current-question"] + 1)
-      setUpdateData(true)
       if (team.fields["current-question"] === allQuestions.length -1) {
         navigate('/results')
         return
       }
+      setUpdateData(true)
     } else {
+      setLoading(true)
       await setPenalty(team.fields.penalties + 600000)
+      setLoading(false)
       setShowIncorrectComponent(true)
     }
+  }
+
+  const skipQuestion = async () => {
+    setAnswer('')
+    await updateCurrentQuestion(team.fields["current-question"] + 1)
+    await setPenalty(team.fields.penalties + 1200000)
+    if (team.fields["current-question"] === allQuestions.length -1) {
+      navigate('/results')
+      return
+    }
+    setUpdateData(true)
   }
 
   const getClue = async () => {
@@ -73,13 +89,25 @@ const Questions = () => {
       style={{
         backgroundImage: 
           currentQuestion.type === 'find' ? 
-            `url(${`./stop-${currentQuestion.image}.png`})` : 
-            `url(${'./tm-logo.png'})`,
+            `url(${`${process.env.PUBLIC_URL}/stop-${currentQuestion.image}.png`})` : 
+            `url(${`${process.env.PUBLIC_URL}/tm-logo.png`})`,
         backgroundSize: "cover"
       }}
     >
       {loading ? (
-        <Spinner animation="grow" />
+        <span>
+          <Spinner animation="grow" title='Correct ✓' />
+          {correctLoading ? (
+            <div 
+              style={{
+                padding: '8px 16px 4px', 
+                backgroundColor: 'forestgreen',
+                borderRadius: '8px'
+              }}>
+              <h1 style={{fontWeight: 'bold', fontSize: '40px'}}>✓ Correct...</h1>
+            </div>
+          ) : null}
+        </span>
       ) : (
         <>
           <Card className="mb-3" style={{backgroundColor: 'rgba(234, 235, 247, .95)'}}>
@@ -96,7 +124,7 @@ const Questions = () => {
                 {currentQuestion.type === 'location' ? (
                   <Card.Header as="h5">Find the {team.fields["current-question"] === 0 ? 'first' : 'next'} location! Remember, Google is your friend</Card.Header>
                 ) : (
-                  <Card.Header as="h5">{currentQuestion.name}! You will find the answer when you arrive</Card.Header>
+                  <Card.Header as="h5">{currentQuestion.name} - {currentQuestion.postcode}! You will find the answer when you arrive</Card.Header>
                 )}
                 <Card.Body>
                   <Card.Text>{currentQuestion.question}</Card.Text>
@@ -110,8 +138,11 @@ const Questions = () => {
             </Card>
           </>
       )}
-      {!loading && currentQuestion.clue ? (
-        <Button variant="danger" onClick={() => getClue()}>Give me a clue! 5 minute penalty</Button>
+      {!loading && currentQuestion.clue && !showIncorrectComponent ? (
+        <Button className='mb-3' variant="success" onClick={() => getClue()}>Give me a clue! 5 minute penalty</Button>
+      ) : null}
+      {!loading && !showIncorrectComponent ? (
+        <Button variant="danger" onClick={() => skipQuestion()}>Skip (20 minute penalty)</Button>
       ) : null}
       <Modal
         show={showModal}

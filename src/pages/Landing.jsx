@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
 
 import InputGroup from 'react-bootstrap/InputGroup'
@@ -20,7 +20,12 @@ const Landing = () => {
 
   const createTeam = async () => {
     setLoading(true)
-    await createNewTeam(name)
+    const newTeam = await createNewTeam(name)
+    if (newTeam === 'exists') {
+      setLoading(false)
+      navigate("/questions")
+      return
+    }
     setLoading(false)
     setNameIsSet(true)
   }
@@ -34,7 +39,7 @@ const Landing = () => {
     <main 
       className="App" 
       style={{
-        backgroundImage: `url(${'./tm-logo.png'})`,
+        backgroundImage: `url(${`${process.env.PUBLIC_URL}/tm-logo.png`})`,
         backgroundSize: "cover"
       }}
     >

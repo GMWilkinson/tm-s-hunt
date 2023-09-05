@@ -27,20 +27,20 @@ const Results = () => {
 
   useEffect(() => {
     async function fetchData() {
-      if (localStorage.getItem('score-saved') === 'saved') {
-        localStorage.clear()
-        navigate('/')
-      }
       setLoading(true)
       const currentDate = new Date()
       const currentTime = currentDate.getTime()
       const currentTeam = await getTeam()
+      if (currentTeam.fields["total-time"] !== 'unset') {
+        localStorage.clear()
+        navigate('/')
+        return
+      }
       await setFinishTime(currentTeam.fields["start-time"], currentTeam.fields.penalties)
       getDisplayTime(currentTime - currentTeam.fields["start-time"])
       getDisplayTimeWithPenalties((currentTime + currentTeam.fields.penalties) - currentTeam.fields["start-time"])
       setTeam(currentTeam)
       setLoading(false)
-      localStorage.setItem('score-saved', 'saved')
     }
     fetchData()
     
@@ -50,20 +50,28 @@ const Results = () => {
     <main 
       className="App"
       style={{
-        backgroundImage: `url(${'./tm-logo.png'})`,
+        backgroundImage: `url(${`${process.env.PUBLIC_URL}/tm-logo.png`})`,
         backgroundSize: "cover"
       }}
     >
       {loading ? (
         <Spinner animation="grow" />
       ) : (
-        <Card style={{backgroundColor: 'rgba(234, 235, 247, .95)'}}>
-            <Card.Header as="h5">Results for {team.fields.Name}</Card.Header>
+        <>
+          <Card style={{backgroundColor: 'rgba(234, 235, 247, .95)', marginBottom: '16px'}}>
+            <Card.Header as="h5">Congratz {team.fields.Name}! These are your times.</Card.Header>
             <Card.Body>
               <Card.Title>Time before penalties: {time}</Card.Title>
               <Card.Title>Time with penalties: {timeWithPenalties}</Card.Title>
             </Card.Body>
           </Card>
+          <Card style={{backgroundColor: 'rgba(234, 235, 247, .95)'}}>
+            <Card.Body>
+              <Card.Title>Go into the Jack Horner & join the social committee for a drink</Card.Title>
+              <Card.Text>Event Location: Cocktails in the City - Bedford Square Gardens, Bedford Square, WC1B 3DP</Card.Text>
+            </Card.Body>
+          </Card>
+        </>
       )}
     </main>
   ) : null

@@ -9,7 +9,6 @@ export const getTeam = () => {
         console.error(err)
         return reject(err)
       }
-      console.log(record)
       return resolve(record)
     })
   })
